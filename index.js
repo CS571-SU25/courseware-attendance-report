@@ -2,7 +2,7 @@ import fs from 'fs';
 import { parse } from "csv-parse/sync";
 import csvWriter from "csv-writer";
 
-const ASSIGNMENT_HEADER = "Attendance: Introduction (2707783)";
+const ASSIGNMENT_HEADER = "Attendance: Interaction Design (2707791)";
 const DURATION = parseInt(fs.readFileSync("./includes/duration.secret").toString().trim());
 
 
@@ -59,8 +59,13 @@ const timeReport = parse(fs.readFileSync("./includes/participants.csv"), {
     return acc;
 }, {});
 
-console.warn("The following students attended but did not meet the time requirements...");
-console.warn(Object.entries(timeReport).filter(tr => tr[1] < DURATION));
+if (Object.entries(timeReport).filter(tr => tr[1] < DURATION).length === 0) {
+    console.log(`All students met the time requirement of ${DURATION} minutes!`)
+} else {
+    console.warn(`The following students attended but did not meet the time requirement of ${DURATION} minutes...`);
+    console.warn(Object.entries(timeReport).filter(tr => tr[1] < DURATION));
+}
+
 
 await csvWriter.createObjectCsvWriter({
     path: "upload.csv",
